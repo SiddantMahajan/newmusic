@@ -8,8 +8,8 @@ document.head.appendChild(tag);
 // Init player
 function onYouTubeIframeAPIReady() {
   player = new YT.Player('player', {
-    height: '300',
-    width: '300',
+    height: '0',
+    width: '0',
     videoId: '',
     playerVars: {
       autoplay: 1,
@@ -33,6 +33,15 @@ const seek = document.getElementById("seek");
 const navbar = document.getElementById("navbar");
 const expandButton = document.getElementById("expandbutton");
 const closeBtn = document.getElementById("closeBtn");
+var currplaylistitems = new Set();
+
+class songinfo {
+  constructor(id, name, author) {
+    this.name = name;
+    this.id = id;
+    this.author = author;
+  }
+}
 
 // ---------------- NAV ----------------
 buttons.forEach((btn, index) => {
@@ -59,7 +68,7 @@ closeBtn.addEventListener("click", (e) => {
 // ---------------- PLAYER ----------------
 function onPlayerReady(event) {
   event.target.playVideo();
-
+  event.target.setVolume(100);
   setInterval(updatePlayerUI, 500);
 }
 
@@ -126,17 +135,9 @@ seek.addEventListener("input", () => {
 });
 
 // ---------------- LOAD VIDEO ----------------
-function loadVideo(videoId) {
-  player.loadVideoById(videoId);
-  setPauseIcon();
-  updateVideoDetails();
-  // Delay to ensure data is ready
-  setTimeout(updateVideoDetails, 500);
-}
 
 function updateVideoDetails() {
   const data = player.getVideoData();
-  console.log(data);
   if (!data) return;
 
   updateText("songname_ex", data.title);
@@ -159,10 +160,24 @@ function updateThumbnail() {
 }
 
 // ---------------- PLAYER STATE ----------------
+let lastVideoId = null;
+
 function onPlayerStateChange(event) {
   if (event.data === YT.PlayerState.PLAYING) {
     setPauseIcon();
-  } else if (event.data === YT.PlayerState.PAUSED) {
+
+    const data = player.getVideoData();
+    if (!data || !data.video_id) return;
+
+    // ✅ Only run if it's a NEW video
+    if (data.video_id !== lastVideoId) {
+      lastVideoId = data.video_id;
+      updateVideoDetails();
+      updatecurrentplaylist();
+      rendercurrentplayList();
+    }
+  }
+  else if (event.data === YT.PlayerState.PAUSED) {
     setPlayIcon();
   }
 }
@@ -224,4 +239,40 @@ function getUserInfo() {
     .catch((error) => {
       console.error("Error fetching user info:", error);
     });
+}
+
+
+function search() {
+  var x = document.getElementById("searchbox");
+  var textboxvalue = x.value;
+  playSong(textboxvalue);
+
+}
+
+
+function playSong(id) {
+  setPauseIcon();
+  updateVideoDetails();
+  setTimeout(updateVideoDetails, 500);
+  player.loadVideoById(id, 0, 'large');
+  player.playVideo();
+}
+function updatecurrentplaylist() {
+  const data = player.getVideoData();
+  currplaylistitems.add(new songinfo(data.video_id, data.title, data.author));
+}
+
+function rendercurrentplayList() {
+  var item = '';
+  console.log(currplaylistitems);
+  var currentplaylist = document.getElementById("currentplaylist");
+  currentplaylist.innerHTML = '';
+  currplaylistitems.forEach((song) => {
+    if (song !== 'undefined') {
+      const thumb = `https://img.youtube.com/vi/${song.id}/maxresdefault.jpg`;
+      item += `<li id="${song.id}"><img src="${thumb}"class="pitemimg" crossorigin="anonymous" id="aart_coll"><span style="display: inline; padding-top:4px"><p>${song.name}</p><p>${song.author}</p></span></li>`;
+    }
+
+  });
+  currentplaylist.innerHTML += item;
 }
