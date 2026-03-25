@@ -38,12 +38,12 @@
                         <span class="nameandartist">
                             <p id="title_coll">Ed Sheeran - Sapphire (Lyric Video)</p>
                             <span style="display: inline;">
-                            <p style="display: inline;" id="auth_coll">Ed Sheeran</p>
-                            <span style="display: inline; float: right;">
-                                <span id="current_coll">00:00</span> /
-                                <span id="duration_coll">00:00</span>
+                                <p style="display: inline;" id="auth_coll">Ed Sheeran</p>
+                                <span style="display: inline; float: right;">
+                                    <span id="current_coll">00:00</span> /
+                                    <span id="duration_coll">00:00</span>
+                                </span>
                             </span>
-                        </span>
                         </span>
                     </div>
 
@@ -90,10 +90,14 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-12 col-lg-2" style="height: 100%; padding: 0;margin: 0;">
+                        <div class="col-12 col-lg-3" style="height: 100%; padding: 0;margin: 0;">
                             <div id="player"></div>
                         </div>
-                        <div class="col-12 col-lg-6" style="height: 100%; padding: 0;margin: 0;"></div>
+                        <div class="col-12 col-lg-5 d-flex align-items-center"
+                            style="height: 100%; padding: 10px; margin: 0;border-radius:40px;">
+                            <ul class="currentplaylist" id="currentplaylist">
+                            </ul>
+                        </div>
                     </div>
                 </div>
 
@@ -105,11 +109,25 @@
     </div>
 
     <div class="row middle">
-        <button style="width: 20%; height: 20%;" onclick="Authenticate()">Login Button</button>
-        <button style="width: 20%; height: 20%;" onclick="setToken()">Login Button</button>
-        <button style="width: 20%; height: 20%;" onclick="loadVideo('YyepU5ztLf4')">Test Button</button>
+        <div class="main area" style="padding: 0;">
+            <ul class="mainlist">
+                <li id="a" style="background-color: bisque;">card1</li>
+                <li id="b" style="background-color: red;">card2</li>
+                <li id="c">
+                    <div class="row" style="height: 100%; display: block;">
+                        <div class="col-12" style="height: 50px;"></div>
 
-        <p style="color: aliceblue;" id="displayname">SSS</p>
+                        <div class="col-12" style="height: 8%;">
+                            <button class="searchbtn" onclick="search()"><i
+                                    class="fa-solid fa-magnifying-glass"></i></button><input id="searchbox"
+                                class="searchbox" type="text" placeholder="Search">
+                        </div>
+                    </div>
+                </li>
+                <li id="d" style="background-color: violet;">card4</li>
+                <li id="e" style="background-color: yellowgreen;">card5</li>
+            </ul>
+        </div>
     </div>
 
     <div class="row bottom">
